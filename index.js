@@ -45,6 +45,18 @@ app.post('/getBook', (req, res) => {
   res.json(book);
 });
 
+/* GET version for browser testing */
+app.get('/getBook', (req, res) => {
+  const id = req.query.id;
+  const book = books.find(b => b.id == id);
+
+  if (!book) {
+    return res.status(404).send("Book not found. Use ?id=1");
+  }
+
+  res.json(book);
+});
+
 // createBook
 app.post('/createBook', (req, res) => {
   const newBook = {
@@ -52,6 +64,24 @@ app.post('/createBook', (req, res) => {
     title: req.body.title,
     author: req.body.author
   };
+  books.push(newBook);
+  res.json(newBook);
+});
+
+/* GET version for browser testing */
+app.get('/createBook', (req, res) => {
+  const { title, author } = req.query;
+
+  if (!title || !author) {
+    return res.send("Provide title and author as query params");
+  }
+
+  const newBook = {
+    id: books.length + 1,
+    title,
+    author
+  };
+
   books.push(newBook);
   res.json(newBook);
 });
